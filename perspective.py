@@ -74,6 +74,12 @@ class Board:
                         point.pos.y = point.baseline.y
                         point.renderpos.y = point.renderbaseline.y
 
+                    clampedY = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
+                    change = point.pos.y - clampedY
+                    point.pos.y = clampedY
+                    point.renderpos.y - change
+
+
     def addWave(self, barrier : int):
         currentYHeight = self.barrierPoints[barrier][1].pos.y
         maxYHeight = self.barrierPoints[barrier][1].baseline.y - config.TRACK_VFX_MAX_STRAY
