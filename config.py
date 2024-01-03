@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "notes.chart"
+CHART_PATH = "Songs/notes.chart"
 DIFFICULTY_PREF = "EasySingle"
 SONG_LOOKAHEAD_MS = 10000
 

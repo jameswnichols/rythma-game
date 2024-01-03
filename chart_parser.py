@@ -2,6 +2,7 @@ import re
 import ast
 from dataclasses import dataclass
 import pygame
+import pathlib
 SECTION_PATTERN = re.compile("\[\w+\]")
 
 @dataclass
@@ -19,7 +20,7 @@ class Tempo:
 
 class Song:
     def __init__(self, filepath : str):
-        self.filepath = filepath
+        self.filepath = pathlib.Path(filepath)
         self.resolution = 192
         self.musicPath = None
         self.songName = None
@@ -45,7 +46,7 @@ class Song:
                 continue
             definition, data = line.split("=")
             songData[definition.strip()] = self.__parseData(data.strip())
-        self.musicPath = songData["MusicStream"]
+        self.musicPath = pathlib.Path.joinpath(self.filepath.parent.absolute(),songData["MusicStream"])
         self.songName = songData["Name"]
         self.artistName = songData["Artist"]
         self.resolution = songData["Resolution"]
@@ -137,5 +138,5 @@ class Song:
                     self.__loadSongData(lines)
                 case "SyncTrack":
                     self.__loadSyncTrack(lines)
-                case "EasySingle":
+                case "ExpertSingle":
                     self.__loadNoteTrack(lines)
