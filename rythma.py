@@ -38,12 +38,15 @@ if __name__ == "__main__":
                 pixelScreenSize = screenSize/config.PIXEL_REDUCTION_FACTOR
                 screen = pygame.display.set_mode(screenSize,pygame.RESIZABLE)
                 pixelScreen = pygame.Surface(pixelScreenSize)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key in KEYS:
-                    for b in KEYS[event.key]:
-                        board.addWave(b)
         
+        keysPressed = pygame.key.get_pressed()
+
+        for key in KEYS:
+            if keysPressed[key]:
+                for b in KEYS[key]:
+                    board.addWave(b)
+
+
         #MAIN FUNCTION STUFF
         board.update(pixelScreenSize)
         board.updateBarrierPoints([i for i in range(board.tracks+1)])
