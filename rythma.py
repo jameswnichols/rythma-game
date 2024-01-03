@@ -46,7 +46,6 @@ if __name__ == "__main__":
                 for b in KEYS[key]:
                     board.addWave(b)
 
-
         #MAIN FUNCTION STUFF
         board.update(pixelScreenSize)
         board.updateBarrierPoints([i for i in range(board.tracks+1)])
