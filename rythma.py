@@ -2,6 +2,7 @@ import pygame
 from pygame import Vector2
 import config
 import perspective
+
 pygame.init()
 
 screenSize = Vector2(800, 600)
@@ -53,8 +54,8 @@ if __name__ == "__main__":
 
         pygame.display.flip()
 
-        dt = clock.tick_busy_loop(120)/1000
+        dt = clock.tick_busy_loop(60)/1000
 
-        pygame.display.set_caption(f"FPS :: {round(clock.get_fps(), 1)}")
+        pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)}")
 
     pygame.quit()

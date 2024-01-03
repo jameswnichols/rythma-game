@@ -14,19 +14,21 @@ class VFXPoint:
 
 class Board:
     def __init__(self, surface : pygame.Surface, tracks : int = 4):
-        self.surface = surface
         self.tracks = tracks
         self.barrierPoints = {}
-        self.size = Vector2(surface.get_size())
-        self.update(self.size)
+        self.size = None
+        self.update(Vector2(surface.get_size()))
         self.createBarrierPoints()
         self.updateBarrierPoints([i for i in range(self.tracks+1)])
+        self.drawSurface = pygame.Surface(self.size, pygame.SRCALPHA)
 
     def update(self, size : Vector2):
-        self.size = size
-        widthPerTrack = (config.TRACKS_MAX_WIDTH) / self.tracks
-        self.widthPerTrack = min(config.TRACK_MAX_WIDTH, widthPerTrack)
-        self.trackStartingPosition = config.TRACK_CENTRE_POSITION - Vector2((self.tracks * self.widthPerTrack)/2, 0)
+        if size != self.size:
+            self.size = size
+            self.drawSurface = pygame.Surface(self.size, pygame.SRCALPHA)
+            widthPerTrack = (config.TRACKS_MAX_WIDTH) / self.tracks
+            self.widthPerTrack = min(config.TRACK_MAX_WIDTH, widthPerTrack)
+            self.trackStartingPosition = config.TRACK_CENTRE_POSITION - Vector2((self.tracks * self.widthPerTrack)/2, 0)
 
     def createBarrierPoints(self):
         self.barrierPoints = {}
@@ -45,6 +47,10 @@ class Board:
             indList = list(barrierPoints.keys())
             for iter in range(config.TRACK_VFX_ITERATIONS):
                 for ind, point in barrierPoints.items():
+
+                    if ind > len(barrierPoints) * config.TRACK_VFX_LENGTH:
+                        break
+
                     force = 0
                     forceFromLeft = 0
                     forceFromRight = 0
@@ -76,14 +82,31 @@ class Board:
         self.barrierPoints[barrier][1].renderpos.y -= change
 
     def render(self, surface : pygame.Surface):
-        self.surface = surface
+        self.drawSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
-            renderPoints = []
-            for point in points.values():
-                renderPoint = point.renderpos.elementwise() * self.size.elementwise()
-                renderPoints.append(renderPoint)
+            renderPoints = {}
+            pointsList = list(points.values())
+            for i, point in enumerate(pointsList):
 
-            pygame.draw.lines(self.surface, config.TRACK_BARRIER_COLOUR, False, renderPoints)
+                if i == len(pointsList) - 1:
+                    continue
+                
+                renderPoint = None
+
+                if i not in renderPoints:
+                    renderPoint = point.renderpos.elementwise() * self.size.elementwise()
+                    renderPoints[i] = renderPoint
+                else:
+                    renderPoint = renderPoints[i]
+                
+                nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
+                renderPoints[i + 1] = nextPoint
+
+                alpha = int(255 * ((len(pointsList) - i) / len(pointsList)))
+
+                pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
+        
+        surface.blit(self.drawSurface, (0, 0))
 
 
         
