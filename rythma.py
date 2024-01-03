@@ -64,9 +64,20 @@ if __name__ == "__main__":
         for note in foundNotes:
             relativeToHeader = -1 * ((note.seconds - endTime) / (endTime - frontTime)) #1 is at header, 0 is far away
 
+            endRelativeToHeader = -1 * ((note.duration - endTime) / (endTime - frontTime))
+
+            difference = pixelScreenSize.y * (relativeToHeader - endRelativeToHeader) if endRelativeToHeader != relativeToHeader else 1
+
             trackWidth = board.tracks * 20
-            renderPosition = Vector2((pixelScreenSize.x / 2 - trackWidth) + 20 * note.track, pixelScreenSize.y * relativeToHeader)
-            pygame.draw.circle(pixelScreen, (255,0,0), renderPosition, 1)
+
+            xPosition = (pixelScreenSize.x / 2 - trackWidth) + 20 * note.track
+
+            noteRect = pygame.Rect(xPosition, pixelScreenSize.y * endRelativeToHeader, 1, difference)
+
+            pygame.draw.rect(pixelScreen, (255,0,0), noteRect)
+
+            #renderPosition = Vector2(, pixelScreenSize.y * relativeToHeader)
+            #pygame.draw.circle(pixelScreen, (255,0,0), renderPosition, 1)
         
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
