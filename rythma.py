@@ -26,6 +26,8 @@ if __name__ == "__main__":
     elapsedTime = 0
     position = 0
 
+    pygame.mixer.music.play()
+
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
         pixelScreen.fill(config.BACKGROUND_COLOUR)
@@ -53,16 +55,18 @@ if __name__ == "__main__":
         board.render(pixelScreen)
 
         #Notes
-        headerPosition = song.getPosition(elapsedTime*1000)
-        song.updateTempo(headerPosition)
-        endPosition = song.getPosition((elapsedTime*1000) + config.SONG_LOOKAHEAD_MS)
+        frontTime = elapsedTime
+        
+        endTime = frontTime + config.SONG_LOOKAHEAD_MS / 1000
 
-        foundNotes = song.getNotes(headerPosition, endPosition)
+        foundNotes = song.getNotes(frontTime, endTime)
 
         for note in foundNotes:
-            closeToHeader = 1 - (note.pos / endPosition) #1 is at header, 0 is far away
-            print(relativeToHeader)
+            relativeToHeader = -1 * ((note.seconds - endTime) / (endTime - frontTime)) #1 is at header, 0 is far away
 
+            trackWidth = board.tracks * 20
+            renderPosition = Vector2((pixelScreenSize.x / 2 - trackWidth) + 20 * note.track, pixelScreenSize.y * relativeToHeader)
+            pygame.draw.circle(pixelScreen, (255,0,0), renderPosition, 1)
         
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
@@ -74,6 +78,6 @@ if __name__ == "__main__":
         elapsedTime += dt
         holdValue = holdValue + dt if holdValue + dt < 2 * math.pi else 0
 
-        pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} POS - {headerPosition} SEC - {int(elapsedTime)}")
+        pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} POS - {frontTime} SEC - {int(elapsedTime)}")
 
     pygame.quit()
