@@ -3,6 +3,7 @@ import ast
 from dataclasses import dataclass
 import pygame
 import pathlib
+import config
 SECTION_PATTERN = re.compile("\[\w+\]")
 
 @dataclass
@@ -28,7 +29,6 @@ class Song:
         self.timesig = "4 4"
         self.tempoData = {}
         self.noteData = {}
-        self.notesTimeList = []
         self.lastPassedNoteTimeIndex = None
         self.loadSections()
         self.music = None
@@ -70,8 +70,7 @@ class Song:
                     self.tempoData[int(position)] = Tempo(int(dataSplit[1])/1000,secondsIn,int(position))
 
     def __loadNoteTrack(self, lines):
-        self.noteData = {}
-        self.notesTimeList = []
+        self.noteData = []
         for line in lines:
             if "=" not in line:
                 continue
@@ -81,9 +80,7 @@ class Song:
             if dataSplit[0] in ["E","S"]:
                 continue
             _, track, duration = dataSplit
-            self.noteData[self.getSecondsIn(position)] = Note(position, int(track), int(duration), self.getSecondsIn(position))
-
-        self.notesTimeList = list(self.noteData.keys())
+            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(duration)), self.getSecondsIn(position)))
 
     def getSecondsIn(self, position : int):
         tempo = self.getTempo(position)
@@ -104,13 +101,13 @@ class Song:
     def getNotes(self, minimumTime, maximumTime):
         checkedIndex = self.lastPassedNoteTimeIndex if self.lastPassedNoteTimeIndex else 0
         notes = []
-        while checkedIndex < len(self.notesTimeList):
-            time = self.notesTimeList[checkedIndex]
-            if time >= maximumTime:
+        while checkedIndex < len(self.noteData):
+            note = self.noteData[checkedIndex]
+            if note.seconds >= maximumTime:
                 return notes
-            if time >= minimumTime:
-                notes.append(self.noteData[time])
-            if time < minimumTime:
+            if note.seconds >= minimumTime:
+                notes.append(note)
+            if note.seconds < minimumTime:
                 self.lastPassedNoteTimeIndex = checkedIndex
             checkedIndex += 1
 
@@ -138,5 +135,5 @@ class Song:
                     self.__loadSongData(lines)
                 case "SyncTrack":
                     self.__loadSyncTrack(lines)
-                case "ExpertSingle":
+                case config.DIFFICULTY_PREF:
                     self.__loadNoteTrack(lines)
