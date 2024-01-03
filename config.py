@@ -2,6 +2,7 @@ from pygame import Vector2
 
 #Song Data
 CHART_PATH = "notes.chart"
+DIFFICULTY_PREF = "EasySingle"
 
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3
