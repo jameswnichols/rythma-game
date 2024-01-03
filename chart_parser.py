@@ -9,7 +9,7 @@ class Note:
     key: int
     duration : int
 
-class File:
+class Song:
     def __init__(self, filepath : str):
         self.filepath = filepath
         self.resolution = 192
@@ -19,7 +19,11 @@ class File:
         self.timesig = "4 4"
         self.tempoData = {}
         self.noteData = {}
+        self.notesPositionList = []
+        self.lastPassedNotePositionIndex = None
+        self.tempo = 120000
         self.loadSections()
+        self.updateTempo(0)
     
     def __parseData(self, data):
         try:
@@ -51,6 +55,7 @@ class File:
 
     def __loadNoteTrack(self, lines):
         self.noteData = {}
+        self.notesPositionList = []
         for line in lines:
             if "=" not in line:
                 continue
@@ -59,7 +64,37 @@ class File:
             if dataSplit[0] in ["E","S"]:
                 continue
             _, key, duration = dataSplit
-            self.noteData[position] = Note(position, key, duration)
+            self.noteData[int(position)] = Note(int(position), key, duration)
+        
+        self.notesPositionList = list(self.noteData.keys())
+
+    def updateTempo(self, position):
+        for pos, tempo in self.tempoData.items():
+            if position >= pos:
+                self.tempo = tempo
+    
+    def getPosition(self, elapsedTime : int):
+        elapsedMinutes = elapsedTime / 1000 / 60
+        return elapsedMinutes * (self.tempo / 1000) * self.resolution
+    
+    def getNotes(self, minimumPos, maximumPos):
+        checkedIndex = self.lastPassedNotePositionIndex if self.lastPassedNotePositionIndex else 0
+        notes = []
+        while checkedIndex < len(self.notesPositionList):
+            position = self.notesPositionList[checkedIndex]
+
+            if position >= maximumPos:
+                return notes
+
+            if position >= minimumPos:
+                notes.append(self.noteData[position])
+            
+            if position < minimumPos:
+                self.lastPassedNotePositionIndex = checkedIndex
+            
+            checkedIndex += 1
+        
+        return notes
 
     def loadSections(self):
         fileData = None
