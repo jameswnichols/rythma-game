@@ -2,6 +2,8 @@ import pygame
 from pygame import Vector2
 import config
 import perspective
+import chart_parser
+import math
 
 pygame.init()
 
@@ -19,11 +21,15 @@ if __name__ == "__main__":
 
     pixelScreen = pygame.Surface(pixelScreenSize)
 
+    songFile = chart_parser.File(config.CHART_PATH)
+
     board = perspective.Board(pixelScreen, tracks=5)
 
     running = True
 
     dt = 0
+
+    holdValue = 0
 
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
@@ -44,7 +50,7 @@ if __name__ == "__main__":
         for key in KEYS:
             if keysPressed[key]:
                 for b in KEYS[key]:
-                    board.addWave(b)
+                    board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * holdValue) * config.TRACK_VFX_PRESS_STRENGTH)
 
         #MAIN FUNCTION STUFF
         board.update(pixelScreenSize)
@@ -57,6 +63,8 @@ if __name__ == "__main__":
         pygame.display.flip()
 
         dt = clock.tick_busy_loop(60)/1000
+
+        holdValue = holdValue + dt if holdValue + dt < 2 * math.pi else 0
 
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)}")
 
