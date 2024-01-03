@@ -78,10 +78,10 @@ class Board:
                     point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
 
 
-    def addWave(self, barrier : int):
+    def addWave(self, barrier : int, value : float = config.TRACK_VFX_PRESS_STRENGTH):
         point = self.barrierPoints[barrier][1]
-        point.pos.y = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y - config.TRACK_VFX_PRESS_STRENGTH, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
-        point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y - config.TRACK_VFX_PRESS_STRENGTH, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
+        point.pos.y = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y - value, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
+        point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y - value, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
 
     def render(self, surface : pygame.Surface):
         self.drawSurface.fill((0,0,0,0))
