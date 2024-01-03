@@ -1,5 +1,8 @@
 from pygame import Vector2
 
+#Song Data
+CHART_PATH = "notes.chart"
+
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3
 
