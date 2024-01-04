@@ -10,8 +10,8 @@ SECTION_PATTERN = re.compile("\[\w+\]")
 class Note:
     pos: int
     track: int
-    duration : int
-    seconds : float
+    endSeconds : int
+    startSeconds : float
 
 @dataclass
 class Tempo:
@@ -77,10 +77,10 @@ class Song:
             position, data = line.split("=")
             position = int(position)
             dataSplit = data.strip().split()
-            _, track, duration = dataSplit
+            _, track, endSeconds = dataSplit
             if (dataSplit[0] in ["E","S"]) or (int(track) >= 5):
                 continue
-            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(duration)), self.getSecondsIn(position)))
+            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(endSeconds)), self.getSecondsIn(position)))
 
     def getSecondsIn(self, position : int):
         tempo = self.getTempo(position)
@@ -103,11 +103,11 @@ class Song:
         notes = []
         while checkedIndex < len(self.noteData):
             note = self.noteData[checkedIndex]
-            if note.seconds >= maximumTime:
+            if note.startSeconds >= maximumTime:
                 return notes
-            if note.seconds >= minimumTime:
+            if note.startSeconds >= minimumTime:
                 notes.append(note)
-            if note.seconds < minimumTime:
+            if note.startSeconds < minimumTime:
                 self.lastPassedNoteTimeIndex = checkedIndex
             checkedIndex += 1
 
