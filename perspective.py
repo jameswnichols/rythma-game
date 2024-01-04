@@ -105,14 +105,16 @@ class Board:
                 nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
                 renderPoints[i + 1] = nextPoint
 
-                alpha = int(255 *  (1 - (i / len(pointsList))))
+                inversePositionPercentage = (len(pointsList) - i) / (len(pointsList) * config.TRACK_FADEOFF_DISTANCE)
+
+                alpha = int(255 * min(inversePositionPercentage, 1))
 
                 pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
         
         surface.blit(self.drawSurface, (0, 0))
     
     def renderNotes(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
-
+        self.drawSurface.fill((0,0,0,0))
         foundNotes = song.getNotes(headerTime, footerTime)
 
         for note in foundNotes:
@@ -131,7 +133,13 @@ class Board:
             noteStartScreenSpace = noteStartTrackedVector.elementwise() * self.size.elementwise()
             noteEndScreenSpace =  notEndTrackedVector.elementwise() * self.size.elementwise()
 
-            pygame.draw.line(surface, (255,0,0), noteStartScreenSpace, noteEndScreenSpace)
+            inverseAlphaPercentage = noteStartPercentage / config.TRACK_FADEOFF_DISTANCE
+
+            alpha = int(255 * min(inverseAlphaPercentage, 1))
+
+            pygame.draw.line(self.drawSurface, (255,0,0,alpha), noteStartScreenSpace, noteEndScreenSpace)
+        
+        surface.blit(self.drawSurface, (0, 0))
 
             #noteRect = pygame.Rect(noteStartScreenSpace.x, noteScreenSpace.y, 1, 1)
 
