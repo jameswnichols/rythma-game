@@ -111,8 +111,24 @@ class Board:
         
         surface.blit(self.drawSurface, (0, 0))
     
-    def renderNotes(self, notes : list[chart_parser.Note]):
-        pass
+    def renderNotes(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
+
+        foundNotes = song.getNotes(headerTime, footerTime)
+
+        for note in foundNotes:
+            relativeToHeader = -1 * ((note.seconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
+
+            endRelativeToHeader = -1 * ((note.duration - footerTime) / (footerTime - headerTime))
+
+            difference = self.size.y * (relativeToHeader - endRelativeToHeader) if endRelativeToHeader != relativeToHeader else 1
+
+            trackWidth = self.tracks * 20
+
+            xPosition = (self.size.x / 2 - trackWidth) + 20 * note.track
+
+            noteRect = pygame.Rect(xPosition, self.size.y * endRelativeToHeader, 1, difference)
+
+            pygame.draw.rect(surface, (255,0,0), noteRect)
 
 
-        
+
