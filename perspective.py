@@ -105,7 +105,7 @@ class Board:
                 nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
                 renderPoints[i + 1] = nextPoint
 
-                alpha = int(255 * ((len(pointsList) - i) / len(pointsList)))
+                alpha = int(255 *  (1 - (i / len(pointsList))))
 
                 pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
         
@@ -116,19 +116,23 @@ class Board:
         foundNotes = song.getNotes(headerTime, footerTime)
 
         for note in foundNotes:
-            relativeToHeader = -1 * ((note.seconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
+            #Percentage of how far the note should be down the track
+            noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
+            noteEndPercentage = ((note.endSeconds - footerTime) / (footerTime - headerTime))
 
-            endRelativeToHeader = -1 * ((note.duration - footerTime) / (footerTime - headerTime))
+            #difference = self.size.y * (noteStartPercentage - noteEndPercentage) if noteEndPercentage != noteStartPercentage else 1
 
-            difference = self.size.y * (relativeToHeader - endRelativeToHeader) if endRelativeToHeader != relativeToHeader else 1
+            notePosition = Vector2(self.widthPerTrack * note.track, 0) + (self.trackStartingPosition + Vector2(self.widthPerTrack / 2, 0))
+            noteStartTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteStartPercentage)
+            notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
+            noteStartScreenSpace = noteStartTrackedVector.elementwise() * self.size.elementwise()
+            noteEndScreenSpace =  notEndTrackedVector.elementwise() * self.size.elementwise()
 
-            trackWidth = self.tracks * 20
+            pygame.draw.line(surface, (255,0,0), noteStartScreenSpace, noteEndScreenSpace)
 
-            xPosition = (self.size.x / 2 - trackWidth) + 20 * note.track
+            #noteRect = pygame.Rect(noteStartScreenSpace.x, noteScreenSpace.y, 1, 1)
 
-            noteRect = pygame.Rect(xPosition, self.size.y * endRelativeToHeader, 1, difference)
-
-            pygame.draw.rect(surface, (255,0,0), noteRect)
+            #pygame.draw.rect(surface, (255,0,0), noteRect)
 
 
 
