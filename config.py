@@ -3,7 +3,7 @@ from pygame import Vector2
 #Song Data
 CHART_PATH = "Songs/badguy.chart"
 DIFFICULTY_PREF = "MediumSingle"
-SONG_LOOKAHEAD_MS = 10000
+SONG_LOOKAHEAD_MS = 3000
 
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3
