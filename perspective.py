@@ -2,6 +2,7 @@ import pygame
 from pygame import Vector2
 import config
 from dataclasses import dataclass
+import chart_parser
 
 @dataclass
 class VFXPoint:
@@ -109,6 +110,9 @@ class Board:
                 pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
         
         surface.blit(self.drawSurface, (0, 0))
+    
+    def renderNotes(self, notes : list[chart_parser.Note]):
+        pass
 
 
         
