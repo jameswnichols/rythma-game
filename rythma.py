@@ -22,9 +22,7 @@ if __name__ == "__main__":
 
     running = True
     dt = 0
-    holdValue = 0
     elapsedTime = 0
-    position = 0
 
     pygame.mixer.music.play()
 
@@ -47,7 +45,7 @@ if __name__ == "__main__":
         for key in KEYS:
             if keysPressed[key]:
                 for b in KEYS[key]:
-                    board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * holdValue) * config.TRACK_VFX_PRESS_STRENGTH)
+                    board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
 
         #MAIN FUNCTION STUFF
         board.update(pixelScreenSize)
@@ -76,18 +74,11 @@ if __name__ == "__main__":
 
             pygame.draw.rect(pixelScreen, (255,0,0), noteRect)
 
-            #renderPosition = Vector2(, pixelScreenSize.y * relativeToHeader)
-            #pygame.draw.circle(pixelScreen, (255,0,0), renderPosition, 1)
-        
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
-
         pygame.display.flip()
-
         dt = clock.tick_busy_loop(60)/1000
-
         elapsedTime += dt
-        holdValue = holdValue + dt if holdValue + dt < 2 * math.pi else 0
 
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} POS - {frontTime} SEC - {int(elapsedTime)}")
 
