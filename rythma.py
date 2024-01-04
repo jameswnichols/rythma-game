@@ -24,7 +24,7 @@ if __name__ == "__main__":
     dt = 0
     elapsedTime = 0
 
-    pygame.mixer.music.play()
+    #pygame.mixer.music.play()
 
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
