@@ -1,12 +1,12 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/badguy.chart"
-DIFFICULTY_PREF = "MediumSingle"
-SONG_LOOKAHEAD_MS = 3000
+CHART_PATH = "Songs/badguy.chart" #Path to chart file.
+DIFFICULTY_PREF = "MediumSingle" #Preffered difficulty, easiest available will be selected if not present.
+SONG_LOOKAHEAD_MS = 3000 #Lower number means fewer notes but they move "faster".
 
 #Pixel Scaling
-PIXEL_REDUCTION_FACTOR = 3
+PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
 
 #Colours
 BACKGROUND_COLOUR = (0, 18, 25)
@@ -19,8 +19,8 @@ TRACKS_MAX_WIDTH = 0.7
 TRACK_MAX_WIDTH = 0.2
 
 #Track VFX Variables
-TRACK_VFX_LENGTH = 0.6
-TRACK_VFX_NUM_POINTS = 50
+TRACK_VFX_LENGTH = 0.6 #How far should the vfx be polled.
+TRACK_VFX_NUM_POINTS = 50 #How many points should be generated.
 TRACK_VFX_SPRING_CONSTANT = 0.005
 TRACK_VFX_SPRING_CONSTANT_BASELINE = 1
 TRACK_VFX_DAMPING = 0.98
