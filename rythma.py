@@ -47,35 +47,19 @@ if __name__ == "__main__":
                 for b in KEYS[key]:
                     board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
 
-        #MAIN FUNCTION STUFF
+        #Render Base of board with waves.
         board.update(pixelScreenSize)
         board.updateBarrierPoints([i for i in range(board.tracks+1)])
         board.render(pixelScreen)
 
-        #Notes
+        #Render Notes
         frontTime = elapsedTime
-        
         endTime = frontTime + config.SONG_LOOKAHEAD_MS / 1000
-
-        foundNotes = song.getNotes(frontTime, endTime)
-
-        for note in foundNotes:
-            relativeToHeader = -1 * ((note.seconds - endTime) / (endTime - frontTime)) #1 is at header, 0 is far away
-
-            endRelativeToHeader = -1 * ((note.duration - endTime) / (endTime - frontTime))
-
-            difference = pixelScreenSize.y * (relativeToHeader - endRelativeToHeader) if endRelativeToHeader != relativeToHeader else 1
-
-            trackWidth = board.tracks * 20
-
-            xPosition = (pixelScreenSize.x / 2 - trackWidth) + 20 * note.track
-
-            noteRect = pygame.Rect(xPosition, pixelScreenSize.y * endRelativeToHeader, 1, difference)
-
-            pygame.draw.rect(pixelScreen, (255,0,0), noteRect)
+        board.renderNotes(pixelScreen, song, frontTime, endTime)
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
+
         pygame.display.flip()
         dt = clock.tick_busy_loop(60)/1000
         elapsedTime += dt
