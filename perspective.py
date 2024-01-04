@@ -118,7 +118,10 @@ class Board:
         for note in foundNotes:
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteEndPercentage = ((note.endSeconds - footerTime) / (footerTime - headerTime))
+            noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
+
+            if (noteEndPercentage != noteStartPercentage) and noteEndPercentage < 0:
+                noteEndPercentage = 0
 
             #difference = self.size.y * (noteStartPercentage - noteEndPercentage) if noteEndPercentage != noteStartPercentage else 1
 
