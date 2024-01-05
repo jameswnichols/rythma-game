@@ -111,7 +111,6 @@ class Song:
             if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= minimumTime or note.endSeconds + config.NOTE_DEPTH_MS/1000 >= minimumTime:
                 if note.index not in self.notePassedList:
                     self.notePassedList.append(note.index)
-                    print(self.notePassedList)
                 notes.append(note)
             if note.endSeconds + config.NOTE_DEPTH_MS/1000 < minimumTime:
                 if note.index in self.notePassedList:
