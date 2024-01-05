@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 from pygame import Vector2
 import config
 from dataclasses import dataclass
@@ -108,17 +109,24 @@ class Board:
         #foundNotes = song.getNotes(headerTime, footerTime)
         for note in notes:
             #Percentage of how far the note should be down the track
-            noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
-            if noteEndPercentage < 0:
-                noteEndPercentage = 0
-            if noteStartPercentage > 1:
-                noteStartPercentage = 1
-            notePosition = Vector2(self.widthPerTrack * note.track, 0) + (self.trackStartingPosition + Vector2(self.widthPerTrack / 2, 0))
-            noteStartTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteStartPercentage)
-            notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
-            noteStartScreenSpace = noteStartTrackedVector.elementwise() * self.size.elementwise()
-            noteEndScreenSpace =  notEndTrackedVector.elementwise() * self.size.elementwise()
-            pygame.draw.line(self.noteSurface, config.NOTE_COLORS[note.track], noteStartScreenSpace, noteEndScreenSpace)
+            noteStartPercentage = -1 * ((note.startSeconds - config.NOTE_DEPTH_MS/1000 - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
+            noteEndPercentage = -1 * ((note.endSeconds + config.NOTE_DEPTH_MS/1000 - footerTime) / (footerTime - headerTime))
+            noteStartPercentage = max(0, min(noteStartPercentage, 1))
+            noteEndPercentage = max(0, min(noteEndPercentage, 1))
+
+            noteLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * config.NOTE_WIDTH,0)
+            noteRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * (config.NOTE_WIDTH),0)
+
+            noteStartLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteStartPercentage)
+            noteStartRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteStartPercentage)
+            noteEndLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteEndPercentage)
+            noteEndRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteEndPercentage)
+
+            noteStartLeftScreenSpace = noteStartLeftVector.elementwise() * self.size.elementwise()
+            noteStartRightScreenSpace = noteStartRightVector.elementwise() * self.size.elementwise()
+            noteEndLeftScreenSpace = noteEndLeftVector.elementwise() * self.size.elementwise()
+            noteEndRightScreenSpace = noteEndRightVector.elementwise() * self.size.elementwise()
+
+            pygame.gfxdraw.filled_polygon(self.noteSurface, (noteStartLeftScreenSpace, noteEndLeftScreenSpace, noteEndRightScreenSpace, noteStartRightScreenSpace), config.NOTE_COLORS[note.track])
         
         surface.blit(self.noteSurface, (0, 0))
