@@ -50,10 +50,11 @@ if __name__ == "__main__":
         #Get Screen "time" and render board + notes
         frontTime = elapsedTime
         endTime = frontTime + config.SONG_LOOKAHEAD_MS / 1000
+        foundNotes = song.getNotes(frontTime, endTime)
 
         board.update(pixelScreenSize)
         board.updateBarrierPoints([i for i in range(board.tracks+1)])
-        board.render(pixelScreen, song, frontTime, endTime)
+        board.render(pixelScreen, foundNotes, frontTime, endTime)
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
