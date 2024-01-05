@@ -108,8 +108,11 @@ class Board:
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
             noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
-            if (noteEndPercentage != noteStartPercentage) and noteEndPercentage < 0:
-                noteEndPercentage = 0
+            if (noteEndPercentage != noteStartPercentage):
+                if noteEndPercentage < 0:
+                    noteEndPercentage = 0
+                if noteStartPercentage > 1:
+                    noteStartPercentage = 1
             notePosition = Vector2(self.widthPerTrack * note.track, 0) + (self.trackStartingPosition + Vector2(self.widthPerTrack / 2, 0))
             noteStartTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteStartPercentage)
             notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
@@ -118,6 +121,3 @@ class Board:
             pygame.draw.line(self.noteSurface, (255,0,0), noteStartScreenSpace, noteEndScreenSpace)
         
         surface.blit(self.noteSurface, (0, 0))
-
-
-
