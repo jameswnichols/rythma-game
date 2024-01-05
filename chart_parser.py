@@ -8,10 +8,11 @@ SECTION_PATTERN = re.compile("\[\w+\]")
 
 @dataclass
 class Note:
-    pos: int
-    track: int
+    pos : int
+    track : int
     endSeconds : int
     startSeconds : float
+    index : int
 
 @dataclass
 class Tempo:
@@ -29,7 +30,7 @@ class Song:
         self.timesig = "4 4"
         self.tempoData = {}
         self.noteData = {}
-        self.lastPassedNoteTimeIndex = None
+        self.notePassedList = []
         self.loadSections()
         self.music = None
     
@@ -71,6 +72,7 @@ class Song:
 
     def __loadNoteTrack(self, lines):
         self.noteData = []
+        index = 0
         for line in lines:
             if "=" not in line:
                 continue
@@ -80,7 +82,8 @@ class Song:
             if (dataSplit[0] in ["E","S"]) or (int(dataSplit[1]) >= 5):
                 continue
             _, track, endSeconds = dataSplit
-            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(endSeconds)), self.getSecondsIn(position)))
+            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(endSeconds)), self.getSecondsIn(position), index))
+            index += 1
 
     def getSecondsIn(self, position : int):
         tempo = self.getTempo(position)
@@ -99,16 +102,20 @@ class Song:
         return currentTempo
     
     def getNotes(self, minimumTime, maximumTime):
-        checkedIndex = self.lastPassedNoteTimeIndex if self.lastPassedNoteTimeIndex else 0
+        checkedIndex = self.notePassedList[0] if self.notePassedList else 0
         notes = []
         while checkedIndex < len(self.noteData):
             note = self.noteData[checkedIndex]
             if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= maximumTime:
                 return notes
             if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= minimumTime or note.endSeconds + config.NOTE_DEPTH_MS/1000 >= minimumTime:
+                if note.index not in self.notePassedList:
+                    self.notePassedList.append(note.index)
+                    print(self.notePassedList)
                 notes.append(note)
             if note.endSeconds + config.NOTE_DEPTH_MS/1000 < minimumTime:
-                self.lastPassedNoteTimeIndex = checkedIndex
+                if note.index in self.notePassedList:
+                    self.notePassedList.remove(note.index)
             checkedIndex += 1
 
         return notes
