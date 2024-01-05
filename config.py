@@ -17,7 +17,8 @@ VANISHING_POINT_POSITION = Vector2(0.5, 0.6)
 TRACK_CENTRE_POSITION = Vector2(0.5, 1)
 TRACKS_MAX_WIDTH = 0.7
 TRACK_MAX_WIDTH = 0.2
-TRACK_FADEOFF_DISTANCE = 0.5
+TRACK_FADEOFF_DISTANCE = 50 #Pixels to fadeoff
+TRACK_FADEOFF_GRADIENT = [0, 0, 150, 255] #Possible alphas, spread evenly through fadeoff
 
 #Track VFX Variables
 TRACK_VFX_LENGTH = 0.6 #How far should the vfx be polled.

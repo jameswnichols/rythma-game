@@ -84,6 +84,15 @@ class Board:
         point.pos.y = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y - value, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
         point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y - value, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
 
+    def generateAlpha(self, centre : Vector2, distance : float, gradient : list):
+        for i in range(distance):
+            alphaIndex = int(len(gradient) * (i / distance))
+            alpha = gradient[alphaIndex]
+            alphaCentreVector = Vector2(i - i/2, i - i/2)
+            screenPosition = centre - alphaCentreVector
+            alphaRect = pygame.Rect(*screenPosition, i, i)
+            self.drawSurface.fill((255,255,255,alpha),alphaRect,special_flags=pygame.BLEND_RGBA_MULT)
+
     def render(self, surface : pygame.Surface):
         self.drawSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
@@ -105,12 +114,14 @@ class Board:
                 nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
                 renderPoints[i + 1] = nextPoint
 
-                inversePositionPercentage = (len(pointsList) - i) / (len(pointsList) * config.TRACK_FADEOFF_DISTANCE)
+                #inversePositionPercentage = (len(pointsList) - i) / (len(pointsList) * config.TRACK_FADEOFF_DISTANCE)
 
-                alpha = int(255 * min(inversePositionPercentage, 1))
+                alpha = 255#int(255 * min(inversePositionPercentage, 1))
 
                 pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
-        
+
+        self.generateAlpha(self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
+
         surface.blit(self.drawSurface, (0, 0))
     
     def renderNotes(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
