@@ -11,14 +11,20 @@ PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
 #Colours
 BACKGROUND_COLOUR = (0, 18, 25)
 TRACK_BARRIER_COLOUR = (148, 210, 189)
+NOTE_COLORS = {0: (43, 193, 147), 1: (171, 3, 0), 2: (243, 142, 0), 3: (16, 100, 124), 4: (204, 77, 0)}
 
 #Board Variables
 VANISHING_POINT_POSITION = Vector2(0.5, 0.2)
 TRACK_CENTRE_POSITION = Vector2(0.5, 0.9)
 TRACKS_MAX_WIDTH = 0.5
 TRACK_MAX_WIDTH = 0.2
-TRACK_FADEOFF_DISTANCE = 50 #Pixels to fadeoff
-TRACK_FADEOFF_GRADIENT = [0, 0, 150, 255] #Possible alphas, spread evenly through fadeoff
+TRACK_FADEOFF_DISTANCE = 50 #Pixels to fadeoff.
+TRACK_FADEOFF_GRADIENT = [0, *[i for i in range(0, 255)]] #Possible alphas, spread evenly through fadeoff.
+
+#Note Variables
+NOTE_DEPTH = 50 #ms
+NOTE_GRACE = 70 #ms
+NOTE_HEIGHT = 0.25 #Percentage of note width.
 
 #Track VFX Variables
 TRACK_VFX_LENGTH = 0.6 #How far should the vfx be polled.

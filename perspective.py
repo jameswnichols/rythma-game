@@ -91,20 +91,20 @@ class Board:
             alphaRect = pygame.Rect(*screenPosition, i, i)
             surface.fill((255,255,255,alpha),alphaRect,special_flags=pygame.BLEND_RGBA_MULT)
 
-    def render(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
+    def render(self, surface : pygame.Surface, notes : list[chart_parser.Note], headerTime : float, footerTime : float):
         self.boardSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
             renderPoints = [point.renderpos.elementwise() * self.size.elementwise() for point in list(points.values())]
             pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_COLOUR, False, renderPoints)
-        self.renderNotes(self.boardSurface, song, headerTime, footerTime)
+        self.renderNotes(self.boardSurface, notes, headerTime, footerTime)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
         
         surface.blit(self.boardSurface, (0, 0))
     
-    def renderNotes(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
+    def renderNotes(self, surface : pygame.Surface, notes : list[chart_parser.Note], headerTime : float, footerTime : float):
         self.noteSurface.fill((0,0,0,0))
-        foundNotes = song.getNotes(headerTime, footerTime)
-        for note in foundNotes:
+        #foundNotes = song.getNotes(headerTime, footerTime)
+        for note in notes:
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
             noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
@@ -118,6 +118,6 @@ class Board:
             notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
             noteStartScreenSpace = noteStartTrackedVector.elementwise() * self.size.elementwise()
             noteEndScreenSpace =  notEndTrackedVector.elementwise() * self.size.elementwise()
-            pygame.draw.line(self.noteSurface, (255,0,0), noteStartScreenSpace, noteEndScreenSpace)
+            pygame.draw.line(self.noteSurface, config.NOTE_COLORS[note.track], noteStartScreenSpace, noteEndScreenSpace)
         
         surface.blit(self.noteSurface, (0, 0))
