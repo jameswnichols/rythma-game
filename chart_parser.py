@@ -103,11 +103,11 @@ class Song:
         notes = []
         while checkedIndex < len(self.noteData):
             note = self.noteData[checkedIndex]
-            if note.startSeconds >= maximumTime:
+            if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= maximumTime:
                 return notes
-            if note.startSeconds >= minimumTime or note.endSeconds >= minimumTime:
+            if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= minimumTime or note.endSeconds + config.NOTE_DEPTH_MS/1000 >= minimumTime:
                 notes.append(note)
-            if note.endSeconds < minimumTime:
+            if note.endSeconds + config.NOTE_DEPTH_MS/1000 < minimumTime:
                 self.lastPassedNoteTimeIndex = checkedIndex
             checkedIndex += 1
 
