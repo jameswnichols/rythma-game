@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/badguy.chart" #Path to chart file.
+CHART_PATH = "Songs/butterbarn.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 1500 #Lower number means larger gaps between notes but they move visually faster.
 
@@ -9,9 +9,10 @@ SONG_LOOKAHEAD_MS = 1500 #Lower number means larger gaps between notes but they 
 PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
 
 #Colours
-BACKGROUND_COLOUR = (0, 18, 25)
-TRACK_BARRIER_COLOUR = (148, 210, 189)
-NOTE_COLORS = {0: (43, 193, 147), 1: (171, 3, 0), 2: (243, 142, 0), 3: (16, 100, 124), 4: (204, 77, 0)}
+BACKGROUND_COLOUR = (9, 17, 20)
+TRACK_BARRIER_COLOUR = (157, 157, 157)
+TRACK_BARRIER_SHADE_COLOUR = (170, 145, 145)
+NOTE_COLORS = {0: (83, 143, 0), 1: (192, 40, 52), 2: (248, 224, 98), 3: (39, 164, 244), 4: (237, 136, 42)}
 
 #Board Variables
 VANISHING_POINT_POSITION = Vector2(0.5, 0.2)
