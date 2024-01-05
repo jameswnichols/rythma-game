@@ -3,7 +3,7 @@ from pygame import Vector2
 #Song Data
 CHART_PATH = "Songs/butterbarn.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
-SONG_LOOKAHEAD_MS = 1500 #Lower number means larger gaps between notes but they move visually faster.
+SONG_LOOKAHEAD_MS = 2000 #Lower number means larger gaps between notes but they move visually faster.
 
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
@@ -23,8 +23,9 @@ TRACK_FADEOFF_DISTANCE = 50 #Pixels to fadeoff.
 TRACK_FADEOFF_GRADIENT = [0, *[i for i in range(0, 255)]] #Possible alphas, spread evenly through fadeoff.
 
 #Note Variables
-NOTE_DEPTH = 50 #ms
-NOTE_GRACE = 70 #ms
+NOTE_DEPTH_MS = 50 #ms
+NOTE_GRACE_MS = 70 #ms
+NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
 NOTE_HEIGHT = 0.25 #Percentage of note width.
 
 #Track VFX Variables
