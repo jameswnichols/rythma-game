@@ -95,6 +95,8 @@ class Board:
         self.boardSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
             renderPoints = [point.renderpos.elementwise() * self.size.elementwise() for point in list(points.values())]
+            shadowPoints = [(point.renderpos.elementwise() * self.size.elementwise()) + Vector2(0, 1) for point in list(points.values())]
+            pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_SHADE_COLOUR, False, shadowPoints)
             pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_COLOUR, False, renderPoints)
         self.renderNotes(self.boardSurface, notes, headerTime, footerTime)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
@@ -108,11 +110,10 @@ class Board:
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
             noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
-            if (noteEndPercentage != noteStartPercentage):
-                if noteEndPercentage < 0:
-                    noteEndPercentage = 0
-                if noteStartPercentage > 1:
-                    noteStartPercentage = 1
+            if noteEndPercentage < 0:
+                noteEndPercentage = 0
+            if noteStartPercentage > 1:
+                noteStartPercentage = 1
             notePosition = Vector2(self.widthPerTrack * note.track, 0) + (self.trackStartingPosition + Vector2(self.widthPerTrack / 2, 0))
             noteStartTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteStartPercentage)
             notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
