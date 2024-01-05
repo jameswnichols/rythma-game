@@ -47,15 +47,14 @@ if __name__ == "__main__":
                 for b in KEYS[key]:
                     board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
 
-        #Render Base of board with waves.
-        board.update(pixelScreenSize)
-        board.updateBarrierPoints([i for i in range(board.tracks+1)])
-        board.render(pixelScreen)
-
-        #Render Notes
+        #Get Screen "time" and render board + notes
         frontTime = elapsedTime
         endTime = frontTime + config.SONG_LOOKAHEAD_MS / 1000
-        board.renderNotes(pixelScreen, song, frontTime, endTime)
+
+        board.update(pixelScreenSize)
+        board.updateBarrierPoints([i for i in range(board.tracks+1)])
+        board.render(pixelScreen, song, frontTime, endTime)
+
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
