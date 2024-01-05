@@ -105,9 +105,9 @@ class Song:
             note = self.noteData[checkedIndex]
             if note.startSeconds >= maximumTime:
                 return notes
-            if note.startSeconds >= minimumTime:
+            if note.startSeconds >= minimumTime or note.endSeconds >= minimumTime:
                 notes.append(note)
-            if note.startSeconds < minimumTime:
+            if note.endSeconds < minimumTime:
                 self.lastPassedNoteTimeIndex = checkedIndex
             checkedIndex += 1
 
