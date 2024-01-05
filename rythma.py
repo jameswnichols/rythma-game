@@ -45,7 +45,7 @@ if __name__ == "__main__":
         for key in KEYS:
             if keysPressed[key]:
                 for b in KEYS[key]:
-                    board.addWave(b,math.sin(config.TRACK_VFX_SIN_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
+                    board.addWave(b,config.TRACK_VFX_SIN_Y_MULTIPLIER * math.sin(config.TRACK_VFX_SIN_X_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
 
         #Get Screen "time" and render board + notes
         frontTime = elapsedTime
@@ -54,7 +54,6 @@ if __name__ == "__main__":
         board.update(pixelScreenSize)
         board.updateBarrierPoints([i for i in range(board.tracks+1)])
         board.render(pixelScreen, song, frontTime, endTime)
-
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
