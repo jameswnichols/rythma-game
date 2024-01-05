@@ -94,20 +94,8 @@ class Board:
     def render(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
         self.boardSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
-            renderPoints = {}
-            pointsList = list(points.values())
-            for i, point in enumerate(pointsList):
-                if i == len(pointsList) - 1:
-                    continue
-                renderPoint = None
-                if i not in renderPoints:
-                    renderPoint = point.renderpos.elementwise() * self.size.elementwise()
-                    renderPoints[i] = renderPoint
-                else:
-                    renderPoint = renderPoints[i]
-                nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
-                renderPoints[i + 1] = nextPoint
-                pygame.draw.line(self.boardSurface, config.TRACK_BARRIER_COLOUR, renderPoint, nextPoint)
+            renderPoints = [point.renderpos.elementwise() * self.size.elementwise() for point in list(points.values())]
+            pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_COLOUR, False, renderPoints)
         self.renderNotes(self.boardSurface, song, headerTime, footerTime)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
         
