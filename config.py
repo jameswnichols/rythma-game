@@ -2,7 +2,7 @@ from pygame import Vector2
 
 #Song Data
 CHART_PATH = "Songs/badguy.chart" #Path to chart file.
-DIFFICULTY_PREF = "MediumSingle" #Preffered difficulty, easiest available will be selected if not present.
+DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 1500 #Lower number means larger gaps between notes but they move visually faster.
 
 #Pixel Scaling
