@@ -63,6 +63,6 @@ if __name__ == "__main__":
         dt = clock.tick_busy_loop(60)/1000
         elapsedTime += dt
 
-        pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} POS - {frontTime} SEC - {int(elapsedTime)}")
+        pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} POS - {int(frontTime)} SEC - {int(elapsedTime)} NOTES - {len(foundNotes)} ACTIVE - {len(song.notePassedList)}")
 
     pygame.quit()
