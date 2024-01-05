@@ -77,9 +77,9 @@ class Song:
             position, data = line.split("=")
             position = int(position)
             dataSplit = data.strip().split()
-            _, track, endSeconds = dataSplit
-            if (dataSplit[0] in ["E","S"]) or (int(track) >= 5):
+            if (dataSplit[0] in ["E","S"]) or (int(dataSplit[1]) >= 5):
                 continue
+            _, track, endSeconds = dataSplit
             self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(endSeconds)), self.getSecondsIn(position)))
 
     def getSecondsIn(self, position : int):
