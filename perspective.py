@@ -21,12 +21,14 @@ class Board:
         self.update(Vector2(surface.get_size()))
         self.createBarrierPoints()
         self.updateBarrierPoints([i for i in range(self.tracks+1)])
-        self.drawSurface = pygame.Surface(self.size, pygame.SRCALPHA)
+        self.boardSurface = pygame.Surface(self.size, pygame.SRCALPHA)
+        self.noteSurface = pygame.Surface(self.size, pygame.SRCALPHA)
 
     def update(self, size : Vector2):
         if size != self.size:
             self.size = size
-            self.drawSurface = pygame.Surface(self.size, pygame.SRCALPHA)
+            self.boardSurface = pygame.Surface(self.size, pygame.SRCALPHA)
+            self.noteSurface = pygame.Surface(self.size, pygame.SRCALPHA)
             widthPerTrack = (config.TRACKS_MAX_WIDTH) / self.tracks
             self.widthPerTrack = min(config.TRACK_MAX_WIDTH, widthPerTrack)
             self.trackStartingPosition = config.TRACK_CENTRE_POSITION - Vector2((self.tracks * self.widthPerTrack)/2, 0)
@@ -48,10 +50,8 @@ class Board:
             indList = list(barrierPoints.keys())
             for iter in range(config.TRACK_VFX_ITERATIONS):
                 for ind, point in barrierPoints.items():
-
                     if ind > len(barrierPoints) * config.TRACK_VFX_LENGTH:
                         break
-
                     force = 0
                     forceFromLeft = 0
                     forceFromRight = 0
@@ -66,7 +66,6 @@ class Board:
                     force += forceFromLeft + forceFromRight + forceToBaseline
                     acceleration = force / point.mass
                     point.speed.y = (config.TRACK_VFX_DAMPING * point.speed.y + acceleration)
-                    
                     #Prevents line from permanently moving up by locking first and last pos
                     if 0 < ind < len(indList) -1:
                         point.pos.y += point.speed.y
@@ -74,7 +73,6 @@ class Board:
                     else:
                         point.pos.y = point.baseline.y
                         point.renderpos.y = point.renderbaseline.y
-
                     point.pos.y = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
                     point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
 
@@ -84,77 +82,54 @@ class Board:
         point.pos.y = max(point.baseline.y-config.TRACK_VFX_MAX_STRAY, min(point.pos.y - value, point.baseline.y+config.TRACK_VFX_MAX_STRAY))
         point.renderpos.y = max(point.renderbaseline.y-config.TRACK_VFX_MAX_STRAY, min(point.renderpos.y - value, point.renderbaseline.y+config.TRACK_VFX_MAX_STRAY))
 
-    def generateAlpha(self, centre : Vector2, distance : float, gradient : list):
+    def generateAlpha(self, surface : pygame.Surface, centre : Vector2, distance : float, gradient : list):
         for i in range(distance):
             alphaIndex = int(len(gradient) * (i / distance))
             alpha = gradient[alphaIndex]
             alphaCentreVector = Vector2(i - i/2, i - i/2)
             screenPosition = centre - alphaCentreVector
             alphaRect = pygame.Rect(*screenPosition, i, i)
-            self.drawSurface.fill((255,255,255,alpha),alphaRect,special_flags=pygame.BLEND_RGBA_MULT)
+            surface.fill((255,255,255,alpha),alphaRect,special_flags=pygame.BLEND_RGBA_MULT)
 
-    def render(self, surface : pygame.Surface):
-        self.drawSurface.fill((0,0,0,0))
+    def render(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
+        self.boardSurface.fill((0,0,0,0))
         for barrier, points in self.barrierPoints.items():
             renderPoints = {}
             pointsList = list(points.values())
             for i, point in enumerate(pointsList):
-
                 if i == len(pointsList) - 1:
                     continue
-                
                 renderPoint = None
-
                 if i not in renderPoints:
                     renderPoint = point.renderpos.elementwise() * self.size.elementwise()
                     renderPoints[i] = renderPoint
                 else:
                     renderPoint = renderPoints[i]
-                
                 nextPoint = pointsList[i + 1].renderpos.elementwise() * self.size.elementwise()
                 renderPoints[i + 1] = nextPoint
-
-                #inversePositionPercentage = (len(pointsList) - i) / (len(pointsList) * config.TRACK_FADEOFF_DISTANCE)
-
-                alpha = 255#int(255 * min(inversePositionPercentage, 1))
-
-                pygame.draw.line(self.drawSurface, (*config.TRACK_BARRIER_COLOUR, alpha), renderPoint, nextPoint)
-
-        self.generateAlpha(self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
-
-        surface.blit(self.drawSurface, (0, 0))
+                pygame.draw.line(self.boardSurface, config.TRACK_BARRIER_COLOUR, renderPoint, nextPoint)
+        self.renderNotes(self.boardSurface, song, headerTime, footerTime)
+        self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
+        
+        surface.blit(self.boardSurface, (0, 0))
     
     def renderNotes(self, surface : pygame.Surface, song : chart_parser.Song, headerTime : float, footerTime : float):
-        self.drawSurface.fill((0,0,0,0))
+        self.noteSurface.fill((0,0,0,0))
         foundNotes = song.getNotes(headerTime, footerTime)
-
         for note in foundNotes:
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
             noteEndPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
-
             if (noteEndPercentage != noteStartPercentage) and noteEndPercentage < 0:
                 noteEndPercentage = 0
-
-            #difference = self.size.y * (noteStartPercentage - noteEndPercentage) if noteEndPercentage != noteStartPercentage else 1
-
             notePosition = Vector2(self.widthPerTrack * note.track, 0) + (self.trackStartingPosition + Vector2(self.widthPerTrack / 2, 0))
             noteStartTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteStartPercentage)
             notEndTrackedVector = config.VANISHING_POINT_POSITION.lerp(notePosition, noteEndPercentage)
             noteStartScreenSpace = noteStartTrackedVector.elementwise() * self.size.elementwise()
             noteEndScreenSpace =  notEndTrackedVector.elementwise() * self.size.elementwise()
-
-            inverseAlphaPercentage = noteStartPercentage / config.TRACK_FADEOFF_DISTANCE
-
-            alpha = int(255 * min(inverseAlphaPercentage, 1))
-
-            pygame.draw.line(self.drawSurface, (255,0,0,alpha), noteStartScreenSpace, noteEndScreenSpace)
+            pygame.draw.line(self.noteSurface, (255,0,0), noteStartScreenSpace, noteEndScreenSpace)
         
-        surface.blit(self.drawSurface, (0, 0))
-
-            #noteRect = pygame.Rect(noteStartScreenSpace.x, noteScreenSpace.y, 1, 1)
-
-            #pygame.draw.rect(surface, (255,0,0), noteRect)
+        surface.blit(self.noteSurface, (0, 0))
 
 
 
