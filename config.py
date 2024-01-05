@@ -1,9 +1,9 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/butterbarn.chart" #Path to chart file.
+CHART_PATH = "Songs/debug.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
-SONG_LOOKAHEAD_MS = 2000 #Lower number means larger gaps between notes but they move visually faster.
+SONG_LOOKAHEAD_MS = 3000 #Lower number means larger gaps between notes but they move visually faster.
 
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
