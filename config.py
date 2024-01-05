@@ -3,7 +3,7 @@ from pygame import Vector2
 #Song Data
 CHART_PATH = "Songs/badguy.chart" #Path to chart file.
 DIFFICULTY_PREF = "MediumSingle" #Preffered difficulty, easiest available will be selected if not present.
-SONG_LOOKAHEAD_MS = 3000 #Lower number means fewer notes but they move "faster".
+SONG_LOOKAHEAD_MS = 1500 #Lower number means larger gaps between notes but they move visually faster.
 
 #Pixel Scaling
 PIXEL_REDUCTION_FACTOR = 3 #What to divide the original screen resolution by.
@@ -13,7 +13,7 @@ BACKGROUND_COLOUR = (0, 18, 25)
 TRACK_BARRIER_COLOUR = (148, 210, 189)
 
 #Board Variables
-VANISHING_POINT_POSITION = Vector2(0.5, 0.4)
+VANISHING_POINT_POSITION = Vector2(0.5, 0.2)
 TRACK_CENTRE_POSITION = Vector2(0.5, 0.9)
 TRACKS_MAX_WIDTH = 0.5
 TRACK_MAX_WIDTH = 0.2
@@ -31,4 +31,3 @@ TRACK_VFX_PRESS_STRENGTH = 0.03
 TRACK_VFX_MAX_STRAY = 0.05
 TRACK_VFX_SIN_X_MULTIPLIER = 20
 TRACK_VFX_SIN_Y_MULTIPLIER = 0.5
-
