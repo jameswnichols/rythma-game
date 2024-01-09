@@ -127,7 +127,7 @@ class Board:
         blurStartPosition = scoreLineStartScreenSpace - Vector2(scoreLineStartScreenSpace.x*config.TRACK_BOTTOM_BUFFER, -config.TRACK_BOTTOM_FADEOFF_OFFSET)
         blurEndPosition = scoreLineEndScreenSpace + Vector2(scoreLineEndScreenSpace.x*config.TRACK_BOTTOM_BUFFER, config.TRACK_BOTTOM_FADEOFF_OFFSET)
         blurWidth = (blurEndPosition.x - blurStartPosition.x)
-        blurHeight = self.size.y - blurStartPosition.y
+        blurHeight = (self.barrierPoints[0][0].renderpos.elementwise() * self.size.elementwise()).y - blurStartPosition.y
         self.generateVerticalAlpha(self.boardSurface,pygame.Rect(blurStartPosition, Vector2(blurWidth, blurHeight)),config.TRACK_BOTTOM_FADEOFF_GRADIENT)#config.TRACK_FADEOFF_GRADIENT
         
         surface.blit(self.boardSurface, (0, 0))
