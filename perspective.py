@@ -93,12 +93,28 @@ class Board:
 
     def render(self, surface : pygame.Surface, notes : list[chart_parser.Note], headerTime : float, footerTime : float):
         self.boardSurface.fill((0,0,0,0))
+
+        scoreLinePercentage = 1 - ((config.SONG_SCOREBAR_MS/1000) / (config.SONG_LOOKAHEAD_MS/1000))
+        scoreLineStart = self.trackStartingPosition
+        scoreLineEnd = self.trackStartingPosition + Vector2(self.widthPerTrack * self.tracks, 0)
+        scoreLineStartVector = config.VANISHING_POINT_POSITION.lerp(scoreLineStart, scoreLinePercentage)
+        scoreLineEndVector = config.VANISHING_POINT_POSITION.lerp(scoreLineEnd, scoreLinePercentage)
+        scoreLineStartScreenSpace = scoreLineStartVector.elementwise() * self.size.elementwise()
+        scoreLineEndScreenSpace = scoreLineEndVector.elementwise() * self.size.elementwise()
+        scoreLineStartShadow = scoreLineStartScreenSpace + Vector2(0, 1)
+        scoreLineEndShadow = scoreLineEndScreenSpace + Vector2(0, 1)
+
+        pygame.draw.line(self.boardSurface, config.TRACK_BARRIER_SHADE_COLOUR, scoreLineStartShadow, scoreLineEndShadow)
+
         for barrier, points in self.barrierPoints.items():
             renderPoints = [point.renderpos.elementwise() * self.size.elementwise() for point in list(points.values())]
             shadowPoints = [(point.renderpos.elementwise() * self.size.elementwise()) + Vector2(0, 1) for point in list(points.values())]
             pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_SHADE_COLOUR, False, shadowPoints)
             pygame.draw.lines(self.boardSurface, config.TRACK_BARRIER_COLOUR, False, renderPoints)
-        self.renderNotes(self.boardSurface, notes, headerTime, footerTime)
+        
+        pygame.draw.line(self.boardSurface, config.TRACK_BARRIER_COLOUR, scoreLineStartScreenSpace, scoreLineEndScreenSpace)
+
+        self.renderNotes(self.boardSurface, notes, headerTime-config.SONG_SCOREBAR_MS/1000, footerTime-config.SONG_SCOREBAR_MS/1000)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
         
         surface.blit(self.boardSurface, (0, 0))
