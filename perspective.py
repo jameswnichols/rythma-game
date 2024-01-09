@@ -114,7 +114,7 @@ class Board:
         
         pygame.draw.line(self.boardSurface, config.TRACK_BARRIER_COLOUR, scoreLineStartScreenSpace, scoreLineEndScreenSpace)
 
-        self.renderNotes(self.boardSurface, notes, headerTime-config.SONG_SCOREBAR_MS/1000, footerTime-config.SONG_SCOREBAR_MS/1000)
+        self.renderNotes(self.boardSurface, notes, headerTime, footerTime)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
         
         surface.blit(self.boardSurface, (0, 0))

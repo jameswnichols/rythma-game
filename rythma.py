@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
         board.update(pixelScreenSize)
         #board.updateBarrierPoints([i for i in range(board.tracks+1)])
-        board.render(pixelScreen, foundNotes, frontTime, endTime)
+        board.render(pixelScreen, foundNotes, frontTime-config.SONG_SCOREBAR_MS/1000, endTime-config.SONG_SCOREBAR_MS/1000)
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
