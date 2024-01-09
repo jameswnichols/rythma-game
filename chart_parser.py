@@ -106,13 +106,13 @@ class Song:
         notes = []
         while checkedIndex < len(self.noteData):
             note = self.noteData[checkedIndex]
-            if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= maximumTime:
+            if note.startSeconds >= maximumTime:
                 return notes
-            if note.startSeconds - config.NOTE_DEPTH_MS/1000 >= minimumTime - config.SONG_SCOREBAR_MS/1000 or note.endSeconds + config.NOTE_DEPTH_MS/1000 >= minimumTime - config.SONG_SCOREBAR_MS/1000:
+            if note.startSeconds >= minimumTime - config.SONG_SCOREBAR_MS/1000 or note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000 )>= minimumTime - config.SONG_SCOREBAR_MS/1000:
                 if note.index not in self.notePassedList:
                     self.notePassedList.append(note.index)
                 notes.append(note)
-            if note.endSeconds + config.NOTE_DEPTH_MS/1000 < minimumTime - config.SONG_SCOREBAR_MS/1000:
+            if note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000) < minimumTime - config.SONG_SCOREBAR_MS/1000:
                 if note.index in self.notePassedList:
                     self.notePassedList.remove(note.index)
             checkedIndex += 1
