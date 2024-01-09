@@ -124,8 +124,8 @@ class Board:
         #foundNotes = song.getNotes(headerTime, footerTime)
         for note in notes:
             #Percentage of how far the note should be down the track
-            noteStartPercentage = -1 * ((note.startSeconds - config.NOTE_DEPTH_MS/1000 - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteEndPercentage = -1 * ((note.endSeconds + config.NOTE_DEPTH_MS/1000 - footerTime) / (footerTime - headerTime))
+            noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
+            noteEndPercentage = -1 * ((note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
             noteStartPercentage = max(0, min(noteStartPercentage, 1))
             noteEndPercentage = max(0, min(noteEndPercentage, 1))
 
