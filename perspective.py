@@ -91,6 +91,13 @@ class Board:
             alphaRect = pygame.Rect(*screenPosition, i, i)
             surface.fill((255,255,255,alpha),alphaRect,special_flags=pygame.BLEND_RGBA_MULT)
 
+    def generateVerticalAlpha(self, surface : pygame.Surface, area : pygame.Rect, gradient : list):
+        for y in range(area.y, area.y+area.height):
+            alphaIndex = int(((y-area.y) / area.height) * len(gradient))
+            alpha = gradient[alphaIndex]
+            alphaRect = pygame.Rect(area.x, y, area.width, area.height)
+            surface.fill((255,255,255,alpha), alphaRect, special_flags=pygame.BLEND_RGBA_MULT)
+
     def render(self, surface : pygame.Surface, notes : list[chart_parser.Note], headerTime : float, footerTime : float):
         self.boardSurface.fill((0,0,0,0))
 
@@ -116,6 +123,12 @@ class Board:
 
         self.renderNotes(self.boardSurface, notes, headerTime, footerTime)
         self.generateAlpha(self.boardSurface, self.size.elementwise() * config.VANISHING_POINT_POSITION.elementwise(),config.TRACK_FADEOFF_DISTANCE,config.TRACK_FADEOFF_GRADIENT)
+
+        blurStartPosition = scoreLineStartScreenSpace - Vector2(scoreLineStartScreenSpace.x*config.TRACK_BOTTOM_BUFFER, -config.TRACK_BOTTOM_FADEOFF_OFFSET)
+        blurEndPosition = scoreLineEndScreenSpace + Vector2(scoreLineEndScreenSpace.x*config.TRACK_BOTTOM_BUFFER, config.TRACK_BOTTOM_FADEOFF_OFFSET)
+        blurWidth = (blurEndPosition.x - blurStartPosition.x)
+        blurHeight = self.size.y - blurStartPosition.y
+        self.generateVerticalAlpha(self.boardSurface,pygame.Rect(blurStartPosition, Vector2(blurWidth, blurHeight)),config.TRACK_BOTTOM_FADEOFF_GRADIENT)#config.TRACK_FADEOFF_GRADIENT
         
         surface.blit(self.boardSurface, (0, 0))
     

@@ -21,6 +21,10 @@ TRACKS_MAX_WIDTH = 0.5
 TRACK_MAX_WIDTH = 0.2
 TRACK_FADEOFF_DISTANCE = 50 #Pixels to fadeoff.
 TRACK_FADEOFF_GRADIENT = [0, *[i for i in range(0, 255)]] #Possible alphas, spread evenly through fadeoff.
+TRACK_BOTTOM_FADEOFF_GRADIENT = [*[i for i in range(255, 0, -1)]]
+TRACK_BOTTOM_FADEOFF_OFFSET = 10 #Pixels from the scoreline.
+TRACK_BOTTOM_FADEOFF_DISTANCE = 50
+TRACK_BOTTOM_BUFFER = 0.3
 
 #Note Variables
 NOTE_DEPTH_MS = 50 #ms
