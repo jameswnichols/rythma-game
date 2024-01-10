@@ -136,7 +136,8 @@ class Board:
         self.noteSurface.fill((0,0,0,0))
 
         #foundNotes = song.getNotes(headerTime, footerTime)
-        for note in notes:
+        for i in range(0, len(notes)):
+            note = notes[len(notes)-1-i]
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
             noteEndPercentage = -1 * ((note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
