@@ -30,6 +30,7 @@ TRACK_BOTTOM_BUFFER = 0.3
 NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
+NOTE_TAIL_WIDTH = 0.6
 NOTE_HEIGHT = 0.6 #Percentage of note width.
 NOTE_SIDE_COLOUR_MULTIPLIER = 0.7
 NOTE_TOP_COLOUR_MULTIPLIER = 1.3
