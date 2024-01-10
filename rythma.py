@@ -23,7 +23,7 @@ if __name__ == "__main__":
     running = True
     dt = 0
     elapsedTime = 0
-
+    countTime = True
     #pygame.mixer.music.play()
 
     while running:
@@ -38,7 +38,11 @@ if __name__ == "__main__":
                 screenSize = Vector2(event.w, event.h)
                 pixelScreenSize = screenSize/config.PIXEL_REDUCTION_FACTOR
                 screen = pygame.display.set_mode(screenSize,pygame.RESIZABLE)
-                pixelScreen = pygame.Surface(pixelScreenSize)
+                pixelScreen = pygame.Surface(pixelScreenSize)\
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    countTime = not countTime
         
         keysPressed = pygame.key.get_pressed()
 
@@ -61,7 +65,8 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         dt = clock.tick_busy_loop(60)/1000
-        elapsedTime += dt
+        if countTime:
+            elapsedTime += dt
 
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} Seconds Elapsed - {int(frontTime)} Notes Rendered - {len(foundNotes)}")
 
