@@ -140,16 +140,19 @@ class Board:
             note = notes[len(notes)-1-i]
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteEndPercentage = -1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
-            noteTailPercentage = -1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))
+            noteDistanceScalePercentage = (min(config.TRACK_FULLSIZE_PERCENTAGE,noteStartPercentage)/config.TRACK_FULLSIZE_PERCENTAGE)
+            noteEndDifference = (-1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))) - noteStartPercentage
+            noteEndPercentage = noteStartPercentage + noteEndDifference * noteDistanceScalePercentage #(-1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime)))
+            noteTailDifference = (-1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))) - noteStartPercentage
+            noteTailPercentage = noteStartPercentage + noteTailDifference * noteDistanceScalePercentage
             noteStartPercentage = max(0, min(noteStartPercentage, 1))
             noteEndPercentage = max(0, min(noteEndPercentage, 1))
             noteTailPercentage = max(0, min(noteTailPercentage, 1))
 
-            noteLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * config.NOTE_WIDTH,0)
-            noteRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * (config.NOTE_WIDTH),0)
-            noteTailLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * config.NOTE_TAIL_WIDTH,0)
-            noteTailRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * (config.NOTE_TAIL_WIDTH),0)
+            noteLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * min(config.NOTE_WIDTH,noteDistanceScalePercentage),0)
+            noteRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * min(config.NOTE_WIDTH,noteDistanceScalePercentage),0)
+            noteTailLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * min(config.NOTE_TAIL_WIDTH,noteDistanceScalePercentage),0)
+            noteTailRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * min(config.NOTE_TAIL_WIDTH,noteDistanceScalePercentage),0)
 
             noteStartLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteStartPercentage)
             noteStartRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteStartPercentage)
