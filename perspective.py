@@ -134,6 +134,7 @@ class Board:
     
     def renderNotes(self, surface : pygame.Surface, notes : list[chart_parser.Note], headerTime : float, footerTime : float):
         self.noteSurface.fill((0,0,0,0))
+
         #foundNotes = song.getNotes(headerTime, footerTime)
         for note in notes:
             #Percentage of how far the note should be down the track
@@ -150,11 +151,30 @@ class Board:
             noteEndLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteEndPercentage)
             noteEndRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteEndPercentage)
 
-            noteStartLeftScreenSpace = noteStartLeftVector.elementwise() * self.size.elementwise()
-            noteStartRightScreenSpace = noteStartRightVector.elementwise() * self.size.elementwise()
-            noteEndLeftScreenSpace = noteEndLeftVector.elementwise() * self.size.elementwise()
-            noteEndRightScreenSpace = noteEndRightVector.elementwise() * self.size.elementwise()
+            frontNoteWidth = noteStartRightVector.x - noteStartLeftVector.x
+            endNoteWidth = noteEndRightVector.x - noteEndLeftVector.x
+            frontNoteHeight = Vector2(0, frontNoteWidth * config.NOTE_HEIGHT)
+            endNoteHeight = Vector2(0, endNoteWidth * config.NOTE_HEIGHT)
 
-            pygame.gfxdraw.filled_polygon(self.noteSurface, (noteStartLeftScreenSpace, noteEndLeftScreenSpace, noteEndRightScreenSpace, noteStartRightScreenSpace), config.NOTE_COLORS[note.track])
-        
+            noteTopStartLeftSS = (noteStartLeftVector - frontNoteHeight).elementwise() * self.size.elementwise()
+            noteTopStartRightSS = (noteStartRightVector - frontNoteHeight).elementwise() * self.size.elementwise()
+            noteTopEndLeftSS = (noteEndLeftVector - endNoteHeight).elementwise() * self.size.elementwise()
+            noteTopEndRightSS = (noteEndRightVector - endNoteHeight).elementwise() * self.size.elementwise()
+
+            noteStartLeftSS = noteStartLeftVector.elementwise() * self.size.elementwise()
+            noteStartRightSS = noteStartRightVector.elementwise() * self.size.elementwise()
+            noteEndLeftSS = noteEndLeftVector.elementwise() * self.size.elementwise()
+            noteEndRightSS = noteEndRightVector.elementwise() * self.size.elementwise()
+
+            noteSideColour = tuple([max(x*config.NOTE_SIDE_COLOUR_MULTIPLIER,0) for x in config.NOTE_COLORS[note.track]])
+            noteTopColour = tuple([min(x*config.NOTE_TOP_COLOUR_MULTIPLIER, 255) for x in config.NOTE_COLORS[note.track]])
+
+            #Left Side
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteEndLeftSS, noteTopEndLeftSS, noteTopStartLeftSS, noteStartLeftSS), noteSideColour)
+            #Right Side
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteEndRightSS, noteTopEndRightSS, noteTopStartRightSS, noteStartRightSS), noteSideColour)
+            #Top
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopEndLeftSS, noteTopStartLeftSS, noteTopStartRightSS, noteTopEndRightSS), noteTopColour)
+            #Front
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopStartLeftSS, noteTopStartRightSS, noteStartRightSS, noteStartLeftSS),config.NOTE_COLORS[note.track])
         surface.blit(self.noteSurface, (0, 0))
