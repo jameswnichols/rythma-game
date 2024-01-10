@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/butterbarn.chart" #Path to chart file.
+CHART_PATH = "Songs/notes.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 3000 #Lower number means larger gaps between notes but they move visually faster.
 SONG_SCOREBAR_MS = 500
@@ -30,7 +30,9 @@ TRACK_BOTTOM_BUFFER = 0.3
 NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
-NOTE_HEIGHT = 0.25 #Percentage of note width.
+NOTE_HEIGHT = 0.5 #Percentage of note width.
+NOTE_SIDE_COLOUR_MULTIPLIER = 0.7
+NOTE_TOP_COLOUR_MULTIPLIER = 1.3
 
 #Track VFX Variables
 TRACK_VFX_LENGTH = 0.6 #How far should the vfx be polled.
