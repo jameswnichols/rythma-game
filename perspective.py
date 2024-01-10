@@ -140,17 +140,26 @@ class Board:
             note = notes[len(notes)-1-i]
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteEndPercentage = -1 * ((note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
+            noteEndPercentage = -1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
+            noteTailPercentage = -1 * ((note.endSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))
             noteStartPercentage = max(0, min(noteStartPercentage, 1))
             noteEndPercentage = max(0, min(noteEndPercentage, 1))
+            noteTailPercentage = max(0, min(noteTailPercentage, 1))
 
             noteLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * config.NOTE_WIDTH,0)
             noteRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * (config.NOTE_WIDTH),0)
+            noteTailLeftPosition = Vector2(self.widthPerTrack * note.track, 0) + self.trackStartingPosition + Vector2(self.widthPerTrack * config.NOTE_TAIL_WIDTH,0)
+            noteTailRightPosition = Vector2(self.widthPerTrack * (note.track + 1), 0) + self.trackStartingPosition - Vector2(self.widthPerTrack * (config.NOTE_TAIL_WIDTH),0)
 
             noteStartLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteStartPercentage)
             noteStartRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteStartPercentage)
             noteEndLeftVector = config.VANISHING_POINT_POSITION.lerp(noteLeftPosition, noteEndPercentage)
             noteEndRightVector = config.VANISHING_POINT_POSITION.lerp(noteRightPosition, noteEndPercentage)
+
+            noteTailStartLeftVector = config.VANISHING_POINT_POSITION.lerp(noteTailLeftPosition, noteStartPercentage)
+            noteTailEndLeftVector = config.VANISHING_POINT_POSITION.lerp(noteTailLeftPosition, noteTailPercentage)
+            noteTailStartRightVector = config.VANISHING_POINT_POSITION.lerp(noteTailRightPosition, noteStartPercentage)
+            noteTailEndRightVector = config.VANISHING_POINT_POSITION.lerp(noteTailRightPosition, noteTailPercentage)
 
             frontNoteWidth = noteStartRightVector.x - noteStartLeftVector.x
             endNoteWidth = noteEndRightVector.x - noteEndLeftVector.x
@@ -167,8 +176,16 @@ class Board:
             noteEndLeftSS = noteEndLeftVector.elementwise() * self.size.elementwise()
             noteEndRightSS = noteEndRightVector.elementwise() * self.size.elementwise()
 
+            noteTailStartLeftSS = noteTailStartLeftVector.elementwise() * self.size.elementwise()
+            noteTailEndLeftSS = noteTailEndLeftVector.elementwise() * self.size.elementwise()
+            noteTailStartRightSS = noteTailStartRightVector.elementwise() * self.size.elementwise()
+            noteTailEndRightSS = noteTailEndRightVector.elementwise() * self.size.elementwise()
+
             noteSideColour = tuple([max(x*config.NOTE_SIDE_COLOUR_MULTIPLIER,0) for x in config.NOTE_COLORS[note.track]])
             noteTopColour = tuple([min(x*config.NOTE_TOP_COLOUR_MULTIPLIER, 255) for x in config.NOTE_COLORS[note.track]])
+
+            #Hold Note Tail
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTailStartLeftSS, noteTailEndLeftSS, noteTailEndRightSS, noteTailStartRightSS),config.NOTE_COLORS[note.track])
 
             #Left Side
             pygame.gfxdraw.filled_polygon(self.noteSurface,(noteEndLeftSS, noteTopEndLeftSS, noteTopStartLeftSS, noteStartLeftSS), noteSideColour)
