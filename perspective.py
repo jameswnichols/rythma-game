@@ -174,7 +174,8 @@ class Board:
             #Right Side
             pygame.gfxdraw.filled_polygon(self.noteSurface,(noteEndRightSS, noteTopEndRightSS, noteTopStartRightSS, noteStartRightSS), noteSideColour)
             #Top
-            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopEndLeftSS, noteTopStartLeftSS, noteTopStartRightSS, noteTopEndRightSS), noteTopColour)
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopEndLeftSS, noteTopStartLeftSS, noteTopStartRightSS, noteTopEndRightSS), (*noteTopColour,config.NOTE_TOP_ALPHA))
             #Front
-            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopStartLeftSS, noteTopStartRightSS, noteStartRightSS, noteStartLeftSS),config.NOTE_COLORS[note.track])
+            pygame.gfxdraw.filled_polygon(self.noteSurface,(noteTopStartLeftSS, noteTopStartRightSS, noteStartRightSS, noteStartLeftSS), config.NOTE_COLORS[note.track])
+            
         surface.blit(self.noteSurface, (0, 0))

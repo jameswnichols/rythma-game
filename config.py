@@ -30,9 +30,10 @@ TRACK_BOTTOM_BUFFER = 0.3
 NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
-NOTE_HEIGHT = 0.5 #Percentage of note width.
+NOTE_HEIGHT = 0.6 #Percentage of note width.
 NOTE_SIDE_COLOUR_MULTIPLIER = 0.7
 NOTE_TOP_COLOUR_MULTIPLIER = 1.3
+NOTE_TOP_ALPHA = 255
 
 #Track VFX Variables
 TRACK_VFX_LENGTH = 0.6 #How far should the vfx be polled.
