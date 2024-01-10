@@ -25,6 +25,7 @@ TRACK_BOTTOM_FADEOFF_GRADIENT = [*[i for i in range(255, 0, -1)]]
 TRACK_BOTTOM_FADEOFF_OFFSET = 10 #Pixels from the scoreline.
 TRACK_BOTTOM_FADEOFF_DISTANCE = 50
 TRACK_BOTTOM_BUFFER = 0.3
+TRACK_FULLSIZE_PERCENTAGE = 0.45 #Percentage through the track where notes should be fully scaled.
 
 #Note Variables
 NOTE_DEPTH_MS = 50 #ms
