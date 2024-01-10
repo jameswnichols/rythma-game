@@ -82,7 +82,7 @@ class Song:
             if (dataSplit[0] in ["E","S"]) or (int(dataSplit[1]) >= 5):
                 continue
             _, track, endSeconds = dataSplit
-            self.noteData.append(Note(position, int(track), self.getSecondsIn(position)+self.getSecondsIn(int(endSeconds)), self.getSecondsIn(position), index))
+            self.noteData.append(Note(position, int(track), self.getSecondsIn(position+int(endSeconds)), self.getSecondsIn(position), index))
             index += 1
 
     def getSecondsIn(self, position : int):
