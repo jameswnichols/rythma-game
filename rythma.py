@@ -60,7 +60,7 @@ if __name__ == "__main__":
         pygame.transform.scale(pixelScreen,screenSize, screen)
 
         pygame.display.flip()
-        dt = clock.tick_busy_loop(120)/1000
+        dt = clock.tick_busy_loop(60)/1000
         elapsedTime += dt
 
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} Seconds Elapsed - {int(frontTime)} Notes Rendered - {len(foundNotes)}")
