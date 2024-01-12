@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/countingstars.chart" #Path to chart file.
+CHART_PATH = "Songs/notes.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 3000 #Lower number means larger gaps between notes but they move visually faster.
 SONG_SCOREBAR_MS = 500
@@ -32,7 +32,7 @@ NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
 NOTE_TAIL_WIDTH = 0.6
-NOTE_HEIGHT = 0.6 #Percentage of note width.
+NOTE_HEIGHT = 0.4 #Percentage of note width.
 NOTE_SIDE_COLOUR_MULTIPLIER = 0.7
 NOTE_TOP_COLOUR_MULTIPLIER = 1.3
 NOTE_TOP_ALPHA = 255
