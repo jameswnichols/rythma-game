@@ -140,7 +140,7 @@ class Board:
             note = notes[len(notes)-1-i]
             #Percentage of how far the note should be down the track
             noteStartPercentage = -1 * ((note.startSeconds - footerTime) / (footerTime - headerTime)) #1 is at header, 0 is far away
-            noteDistanceScalePercentage = (min(config.TRACK_FULLSIZE_PERCENTAGE,noteStartPercentage)/config.TRACK_FULLSIZE_PERCENTAGE)
+            noteDistanceScalePercentage = max(0, min(min(config.TRACK_FULLSIZE_PERCENTAGE,noteStartPercentage)/config.TRACK_FULLSIZE_PERCENTAGE, 1))
             noteEndDifference = (-1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime))) - noteStartPercentage
             noteEndPercentage = noteStartPercentage + noteEndDifference * noteDistanceScalePercentage #(-1 * ((note.startSeconds + 2*(config.NOTE_DEPTH_MS/1000) - footerTime) / (footerTime - headerTime)))
             noteTailDifference = (-1 * ((note.endSeconds - footerTime) / (footerTime - headerTime))) - noteStartPercentage
