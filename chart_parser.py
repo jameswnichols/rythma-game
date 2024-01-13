@@ -10,9 +10,11 @@ SECTION_PATTERN = re.compile("\[\w+\]")
 class Note:
     pos : int
     track : int
-    endSeconds : int
+    endSeconds : float
     startSeconds : float
     index : int
+    beenPressed : bool
+    heldTime : float
 
 @dataclass
 class Tempo:
@@ -82,7 +84,7 @@ class Song:
             if (dataSplit[0] in ["E","S"]) or (int(dataSplit[1]) >= 5):
                 continue
             _, track, endSeconds = dataSplit
-            self.noteData.append(Note(position, int(track), self.getSecondsIn(position+int(endSeconds)), self.getSecondsIn(position), index))
+            self.noteData.append(Note(position, int(track), self.getSecondsIn(position+int(endSeconds)), self.getSecondsIn(position), index, False, 0))
             index += 1
 
     def getSecondsIn(self, position : int):
