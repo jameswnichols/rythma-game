@@ -24,7 +24,7 @@ if __name__ == "__main__":
     dt = 0
     elapsedTime = 0
     countTime = True
-    #pygame.mixer.music.play()
+    pygame.mixer.music.play()
 
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
@@ -43,6 +43,7 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     countTime = not countTime
+                    pygame.mixer.music.pause() if not countTime else pygame.mixer.music.unpause()
         
         keysPressed = pygame.key.get_pressed()
 
@@ -67,7 +68,6 @@ if __name__ == "__main__":
         dt = clock.tick_busy_loop(120)/1000
         if countTime:
             elapsedTime += dt
-
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} Seconds Elapsed - {int(frontTime)} Notes Rendered - {len(foundNotes)}")
 
     pygame.quit()
