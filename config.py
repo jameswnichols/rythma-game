@@ -31,7 +31,7 @@ TRACK_FULLSIZE_PERCENTAGE = 0.45 #Percentage through the track where notes shoul
 #Note Variables
 NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
-NOTE_DEBOUNCE_TIME_MS = 20 #ms
+NOTE_DEBOUNCE_TIME_MS = 100 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
 NOTE_TAIL_WIDTH = 0.6
 NOTE_HEIGHT = 0.4 #Percentage of note width.
