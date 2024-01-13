@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 #Song Data
-CHART_PATH = "Songs/notes.chart" #Path to chart file.
+CHART_PATH = "Songs/radioactive.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 3000 #Lower number means larger gaps between notes but they move visually faster.
 SONG_SCOREBAR_MS = 500
