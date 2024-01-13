@@ -4,6 +4,7 @@ import config
 import perspective
 import chart_parser
 import math
+import scoring
 
 pygame.init()
 
@@ -19,6 +20,7 @@ if __name__ == "__main__":
     pixelScreen = pygame.Surface(pixelScreenSize)
     song = chart_parser.Song(config.CHART_PATH)
     board = perspective.Board(pixelScreen, tracks=5)
+    scoreTracker = scoring.Scoring()
 
     running = True
     dt = 0
@@ -51,6 +53,10 @@ if __name__ == "__main__":
         #     if keysPressed[key]:
         #         for b in KEYS[key]:
         #             board.addWave(b,config.TRACK_VFX_SIN_Y_MULTIPLIER * math.sin(config.TRACK_VFX_SIN_X_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
+
+        scoreTracker.updateTracks(keysPressed)
+
+        
 
         #Get Screen "time" and render board + notes
         frontTime = elapsedTime
