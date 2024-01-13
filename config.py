@@ -1,5 +1,5 @@
 from pygame import Vector2
-
+import pygame
 #Song Data
 CHART_PATH = "Songs/radioactive.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
@@ -15,6 +15,7 @@ TRACK_BARRIER_SHADE_COLOUR = (112, 112, 112)
 NOTE_COLORS = {0: (83, 143, 0), 1: (192, 40, 52), 2: (243, 142, 0), 3: (39, 164, 244), 4: (204, 77, 0)}
 
 #Board Variables
+TRACK_BINDS = {0:pygame.K_a,1:pygame.K_s,2:pygame.K_d,3:pygame.K_SEMICOLON,4:pygame.K_QUOTE}
 VANISHING_POINT_POSITION = Vector2(0.5, 0.2)
 TRACK_CENTRE_POSITION = Vector2(0.5, 0.9)
 TRACKS_MAX_WIDTH = 0.5
