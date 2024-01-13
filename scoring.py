@@ -37,9 +37,9 @@ class Scoring:
     def checkNotes(self, foundNotes : list[chart_parser.Note], scoreBarSeconds : float, dt : float):
         pressedInLane = {x : False for x in self.tracks}
         for note in foundNotes:
-            graceSeconds = 0 if note.beenPressed else config.NOTE_GRACE_MS/1000
-            noteHeadStart = note.startSeconds - graceSeconds - (config.NOTE_DEBOUNCE_TIME_MS/1000)
-            noteHeadEnd = note.startSeconds + (2*(config.NOTE_DEPTH_MS/1000)) + graceSeconds + (config.NOTE_DEBOUNCE_TIME_MS/1000)
+            graceSeconds = 0 if note.beenPressed else (config.NOTE_GRACE_MS/1000) + (config.NOTE_DEBOUNCE_TIME_MS/1000)
+            noteHeadStart = note.startSeconds - graceSeconds
+            noteHeadEnd = note.startSeconds + (2*(config.NOTE_DEPTH_MS/1000)) + graceSeconds
             noteTailEnd = note.endSeconds
             noteWithinRange = noteHeadStart <= scoreBarSeconds <= noteHeadEnd
             if not note.beenPressed and noteWithinRange and self.tracks[note.track].justPressed: #
@@ -50,21 +50,15 @@ class Scoring:
                 print(f"Note Hit : {note.pos}")
             elif note.beenPressed and noteWithinRange and self.tracks[note.track].justPressed:
                 self.currentStreak = 0
+                pressedInLane[note.track] = True
                 print(f"Pressed Same Note Twice : {note.pos}")
             elif not note.beenPressed and noteHeadEnd < scoreBarSeconds:
                 note.beenPressed = True
                 self.currentStreak = 0
                 print("Missed Note")
         
-        hasStruck = False
         for track, notePressed in pressedInLane.items():
             if not notePressed and self.tracks[track].justPressed:
-                hasStruck = True
+                self.currentStreak = 0
+                print("Strike")
                 break
-        
-        if hasStruck:
-            self.currentStreak
-            print("Strike")
-        
-                
-            
