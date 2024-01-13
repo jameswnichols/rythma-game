@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     running = True
     dt = 0
-    elapsedTime = 0
+    elapsedTime = 10
     countTime = True
-    pygame.mixer.music.play()
+    #pygame.mixer.music.play()
 
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     countTime = not countTime
-                    pygame.mixer.music.pause() if not countTime else pygame.mixer.music.unpause()
+                    #pygame.mixer.music.pause() if not countTime else pygame.mixer.music.unpause()
         
         keysPressed = pygame.key.get_pressed()
 
@@ -56,12 +56,12 @@ if __name__ == "__main__":
 
         scoreTracker.updateTracks(keysPressed)
 
-        
-
         #Get Screen "time" and render board + notes
         frontTime = elapsedTime
         endTime = frontTime + config.SONG_LOOKAHEAD_MS / 1000
         foundNotes = song.getNotes(frontTime, endTime)
+
+        scoreTracker.checkNotes(foundNotes, frontTime, 0)
 
         board.update(pixelScreenSize)
         #board.updateBarrierPoints([i for i in range(board.tracks+1)])
