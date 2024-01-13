@@ -14,7 +14,7 @@ class Note:
     startSeconds : float
     index : int
     beenPressed : bool
-    heldTime : float
+    beenHeld : float
 
 @dataclass
 class Tempo:
