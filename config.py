@@ -1,7 +1,7 @@
 from pygame import Vector2
 import pygame
 #Song Data
-CHART_PATH = "Songs/radioactive.chart" #Path to chart file.
+CHART_PATH = "Songs/badguy.chart" #Path to chart file.
 DIFFICULTY_PREF = "ExpertSingle" #Preffered difficulty, easiest available will be selected if not present.
 SONG_LOOKAHEAD_MS = 3000 #Lower number means larger gaps between notes but they move visually faster.
 SONG_SCOREBAR_MS = 500
@@ -31,6 +31,7 @@ TRACK_FULLSIZE_PERCENTAGE = 0.45 #Percentage through the track where notes shoul
 #Note Variables
 NOTE_DEPTH_MS = 50 #ms
 NOTE_GRACE_MS = 70 #ms
+NOTE_DEBOUNCE_TIME_MS = 20 #ms
 NOTE_WIDTH = 0.3 #Percentage to take off each side of track width.
 NOTE_TAIL_WIDTH = 0.6
 NOTE_HEIGHT = 0.4 #Percentage of note width.
