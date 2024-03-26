@@ -48,10 +48,10 @@ class Scoring:
                 self.currentStreak += 1
                 pressedInLane[note.track] = True
                 print(f"Note Hit : {note.pos}")
-            elif note.beenPressed and noteWithinRange and self.tracks[note.track].justPressed:
-                self.currentStreak = 0
-                pressedInLane[note.track] = True
-                print(f"Pressed Same Note Twice : {note.pos}")
+            # elif note.beenPressed and noteWithinRange and self.tracks[note.track].justPressed:
+            #     self.currentStreak = 0
+            #     pressedInLane[note.track] = True
+            #     print(f"Pressed Same Note Twice : {note.pos}")
             elif not note.beenPressed and noteHeadEnd < scoreBarSeconds:
                 note.beenPressed = True
                 self.currentStreak = 0

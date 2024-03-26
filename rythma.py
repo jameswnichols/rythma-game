@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     running = True
     dt = 0
-    elapsedTime = 10
+    elapsedTime = 0
     countTime = True
-    #pygame.mixer.music.play()
+    pygame.mixer.music.play()
 
     while running:
         screen.fill(config.BACKGROUND_COLOUR)
@@ -49,10 +49,10 @@ if __name__ == "__main__":
         
         keysPressed = pygame.key.get_pressed()
 
-        # for key in KEYS:
-        #     if keysPressed[key]:
-        #         for b in KEYS[key]:
-        #             board.addWave(b,config.TRACK_VFX_SIN_Y_MULTIPLIER * math.sin(config.TRACK_VFX_SIN_X_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
+        for key in KEYS:
+            if keysPressed[key]:
+                for b in KEYS[key]:
+                    board.addWave(b,config.TRACK_VFX_SIN_Y_MULTIPLIER * math.sin(config.TRACK_VFX_SIN_X_MULTIPLIER * elapsedTime) * config.TRACK_VFX_PRESS_STRENGTH)
 
         scoreTracker.updateTracks(keysPressed)
 
@@ -64,14 +64,14 @@ if __name__ == "__main__":
         scoreTracker.checkNotes(foundNotes, frontTime, 0)
 
         board.update(pixelScreenSize)
-        #board.updateBarrierPoints([i for i in range(board.tracks+1)])
+        board.updateBarrierPoints([i for i in range(board.tracks+1)])
         board.render(pixelScreen, foundNotes, frontTime-config.SONG_SCOREBAR_MS/1000, endTime-config.SONG_SCOREBAR_MS/1000)
 
         #Upscale Pixel Screen
         pygame.transform.scale(pixelScreen,screenSize, screen)
 
         pygame.display.flip()
-        dt = clock.tick_busy_loop(120)/1000
+        dt = clock.tick_busy_loop(60)/1000
         if countTime:
             elapsedTime += dt
         pygame.display.set_caption(f"FPS - {round(clock.get_fps(), 1)} Seconds Elapsed - {int(frontTime)} Notes Rendered - {len(foundNotes)}")
